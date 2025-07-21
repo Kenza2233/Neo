@@ -15,6 +15,7 @@ import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_tts/flutter_tts.dart';
 import 'drawing_canvas.dart';
 import 'version_history_screen.dart';
+import 'dart:ui' as ui;
 
 class NoteEditorScreen extends StatefulWidget {
   final Note? note;
@@ -346,10 +347,16 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                   child: Column(
                     children: [
                       // Placeholder for toolbar
-                      Container(
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12.0),
+                    child: BackdropFilter(
+                      filter: ui.ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                      child: Container(
                         height: 50,
-                        color: Colors.grey[200]?.withOpacity(0.5),
+                        color: Colors.white.withOpacity(0.2),
                         child: const Center(child: Text('Toolbar Placeholder')),
+                      ),
+                    ),
                       ),
                       const SizedBox(height: 16),
                       quill.QuillToolbar.basic(
@@ -368,27 +375,32 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                // Color palette
-                GestureDetector(
-                  onTap: _showColorPicker,
-                  child: Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200]?.withOpacity(0.5),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('Warna Teks'),
-                          const SizedBox(width: 10),
-                          Container(
-                            width: 20,
-                            height: 20,
-                            color: Color(_note.textColor),
+                  // Color palette
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12.0),
+                    child: BackdropFilter(
+                      filter: ui.ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                      child: GestureDetector(
+                        onTap: _showColorPicker,
+                        child: Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
                           ),
-                        ],
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text('Warna Teks'),
+                                const SizedBox(width: 10),
+                                Container(
+                                  width: 20,
+                                  height: 20,
+                                  color: Color(_note.textColor),
+                                ),
+                              ],
+                          ),
+                          ),
                       ),
                     ),
                   ),
