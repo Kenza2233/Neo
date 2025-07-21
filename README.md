@@ -13,18 +13,65 @@ NiTe adalah aplikasi pencatat serbaguna yang dirancang untuk menjadi pendamping 
 
 ## Memulai
 
-Untuk menjalankan aplikasi ini secara lokal, ikuti langkah-langkah berikut:
+Bagian ini akan memandu Anda melalui proses penyiapan lingkungan pengembangan Anda untuk menjalankan NiTe.
 
-1.  **Prasyarat:**
-    *   Pastikan Anda telah menginstal [Flutter SDK](https://flutter.dev/docs/get-started/install).
+### Prasyarat
 
-2.  **Instalasi:**
-    *   Kloning repositori: `git clone https://github.com/pengguna/nite.git`
-    *   Arahkan ke direktori proyek: `cd nite`
-    *   Instal dependensi: `flutter pub get`
+Sebelum Anda mulai, pastikan Anda telah menginstal [Flutter SDK](https://flutter.dev/docs/get-started/install) di mesin Anda. Anda dapat memverifikasi instalasi Anda dengan menjalankan perintah berikut di terminal Anda:
 
-3.  **Menjalankan Aplikasi:**
-    *   Jalankan aplikasi di emulator atau perangkat yang terhubung: `flutter run`
+```bash
+flutter doctor
+```
+
+Perintah ini akan memeriksa lingkungan Anda dan menampilkan laporan tentang status instalasi Flutter Anda. Pastikan tidak ada masalah kritis yang dilaporkan sebelum melanjutkan.
+
+### Instalasi
+
+1.  **Kloning Repositori**
+
+    Gunakan `git` untuk mengkloning repositori ini ke mesin lokal Anda:
+
+    ```bash
+    git clone https://github.com/pengguna/nite.git
+    ```
+
+2.  **Arahkan ke Direktori Proyek**
+
+    Setelah kloning selesai, pindah ke direktori proyek:
+
+    ```bash
+    cd nite
+    ```
+
+3.  **Instal Dependensi**
+
+    Jalankan perintah berikut untuk mengunduh semua dependensi proyek yang diperlukan:
+
+    ```bash
+    flutter pub get
+    ```
+
+### Menjalankan Aplikasi
+
+Setelah Anda menginstal semua dependensi, Anda dapat menjalankan aplikasi di emulator atau perangkat fisik yang terhubung.
+
+1.  **Pilih Perangkat**
+
+    Pastikan Anda memiliki emulator yang berjalan atau perangkat yang terhubung. Anda dapat melihat daftar perangkat yang tersedia dengan menjalankan:
+
+    ```bash
+    flutter devices
+    ```
+
+2.  **Jalankan Aplikasi**
+
+    Gunakan perintah berikut untuk membangun dan menjalankan aplikasi:
+
+    ```bash
+    flutter run
+    ```
+
+    Ini akan menginstal aplikasi di perangkat yang dipilih dan meluncurkannya. Hot reload diaktifkan secara default, jadi Anda dapat melihat perubahan pada kode Anda secara instan.
 
 ## Teknologi yang Digunakan
 
