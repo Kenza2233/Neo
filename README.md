@@ -4,22 +4,29 @@ NiTe adalah aplikasi pencatat serbaguna yang dirancang untuk menjadi pendamping 
 
 ## ✨ Fitur Unggulan NiTe ✨
 
-NiTe bukan sekadar aplikasi catatan biasa. Ini adalah ruang kerja kreatif Anda, yang dirancang untuk beradaptasi dengan cara Anda berpikir dan bekerja.
+NiTe bukan sekadar aplikasi catatan biasa. Ini adalah ekosistem produktivitas lengkap Anda, yang dirancang untuk menangkap, menyempurnakan, dan mengelola ide-ide Anda dengan cara yang belum pernah ada sebelumnya.
 
-### 🎨 **Ekspresikan Diri Anda Sepenuhnya**
-*   **Editor Teks Supercharged:** Lebih dari sekadar tebal dan miring. Gunakan **Neolights** untuk menyorot ide-ide cemerlang Anda dengan warna-warna neon yang cerah, dan pilih dari palet warna yang luas untuk membuat setiap catatan menjadi milik Anda.
-*   **Wallpaper Kustom:** Bosan dengan latar belakang putih? Atur gambar *apa pun* dari galeri Anda sebagai wallpaper untuk catatan Anda. Personalisasi tidak pernah semenyenangkan ini!
+### 🎨 **Kustomisasi Tanpa Batas**
+*   **Editor Teks Supercharged:** Lebih dari sekadar tebal dan miring. Gunakan **Neolights** untuk menyorot ide-ide cemerlang, sisipkan gambar langsung di dalam catatan, dan atur setiap aspek tipografi mulai dari **ukuran font** hingga **spasi baris**.
+*   **Tema & Estetika:** Pilih antara **mode terang dan gelap** yang indah, atau matikan animasi UI untuk pengalaman yang lebih cepat. Jadikan NiTe benar-benar milik Anda.
+*   **Atur Tata Letak Anda:** Pilih dari **lima tata letak catatan yang berbeda** (termasuk grid, daftar, dan staggered) untuk disesuaikan dengan alur kerja visual Anda.
+*   **Wallpaper Kustom:** Atur gambar *apa pun* dari galeri Anda sebagai latar belakang untuk setiap catatan.
+
+### 🚀 **Alat Produktivitas Cerdas**
+*   **Hub Catatan:** Akses laci navigasi khusus untuk melihat catatan Anda yang diurutkan berdasarkan tanggal, memberikan perspektif baru pada pekerjaan Anda tanpa mengganggu tata letak utama Anda.
+*   **Riwayat Versi:** Jangan pernah takut kehilangan ide bagus. Simpan *snapshot* dari catatan Anda dan pulihkan versi sebelumnya kapan saja.
+*   **Fitur Istirahat Cerdas:** Jaga kesehatan digital Anda. Atur batas kata, dan NiTe akan dengan lembut mengingatkan Anda untuk beristirahat.
+*   **Dasbor Analitik:** Dapatkan wawasan mendalam tentang kebiasaan mencatat Anda, termasuk *durasi mengetik*, *jumlah kata*, dan banyak lagi.
+
+### 🌐 **Konektivitas & Aksesibilitas**
+*   **Terjemahkan dengan Sekali Ketuk:** Terjemahkan konten catatan Anda ke berbagai bahasa langsung di dalam aplikasi.
+*   **Ekspor/Impor XML:** Cadangkan atau bagikan catatan Anda dengan mudah menggunakan format XML standar.
+*   **Cetak ke PDF:** Ubah catatan Anda menjadi dokumen PDF yang dapat dicetak dengan sempurna.
+*   **Draw to Text:** Tulis tangan ide-ide Anda, dan biarkan NiTe mengubahnya menjadi teks yang dapat diedit.
+*   **Aksesibilitas Penuh:** Dengan dukungan **Text-to-Speech (Bot Suara)** dan **perekaman audio**, NiTe dirancang untuk dapat diakses oleh semua orang.
 
 ### 🔒 **Privasi & Keamanan Tingkat Lanjut**
-*   **Kunci Catatan 18+:** Simpan pemikiran pribadi Anda dengan aman. Lindungi catatan sensitif dengan **kata sandi** untuk memastikan hanya Anda yang dapat mengaksesnya.
-
-### 🚀 **Tingkatkan Produktivitas Anda**
-*   **Dasbor Analitik:** Pernah bertanya-tanya berapa lama waktu yang Anda habiskan untuk sebuah ide? Dasbor kami memberikan wawasan mendalam tentang kebiasaan mencatat Anda, termasuk *durasi mengetik*, *jumlah kata*, dan banyak lagi.
-*   **Tangkapan Layar Instan:** Abadikan catatan Anda sebagai gambar dengan sekali ketuk. Sempurna untuk dibagikan atau disimpan sebagai referensi visual.
-
-### 🎙️ **Aksesibilitas untuk Semua**
-*   **Bot Suara Cerdas:** Dengarkan catatan Anda dibacakan dengan suara yang jernih, atau gunakan suara Anda untuk menulis. NiTe dirancang agar dapat diakses oleh semua orang, termasuk mereka yang memiliki keterbatasan penglihatan.
-*   **Rekam & Putar:** Lampirkan memo suara ke catatan Anda. Jangan biarkan ide brilian hilang hanya karena Anda tidak sempat menuliskannya.
+*   **Kunci Catatan 18+:** Lindungi catatan sensitif dengan **kata sandi** untuk memastikan hanya Anda yang dapat mengaksesnya.
 
 ## Memulai
 
@@ -181,6 +188,53 @@ Ingin merasakan kebebasan *ngoding* di mana saja? Panduan ini akan memandu Anda 
 *   **Ruang Penyimpanan:** Flutter SDK dan dependensi bisa memakan banyak ruang (beberapa GB). Pastikan ponsel Anda memiliki cukup ruang kosong.
 *   **Error Build?** Jika Anda mengalami error, baca log dengan cermat. Seringkali, ini terkait dengan versi paket atau konfigurasi yang salah. Coba jalankan `flutter clean` lalu `flutter pub get` lagi.
 *   **Kesabaran adalah Kunci:** Mengembangkan di ponsel adalah tantangan, tetapi juga sangat memuaskan. Bersabarlah dan jangan ragu untuk mencari solusi secara online!
+
+---
+
+##  Panduan untuk Pengembang iOS
+
+Menjalankan NiTe di lingkungan macOS untuk pengembangan iOS juga mudah. Berikut adalah langkah-langkahnya:
+
+### **Prasyarat**
+1.  **Flutter SDK:** Pastikan Anda telah menginstal [Flutter SDK](https://flutter.dev/docs/get-started/install/macos) di Mac Anda.
+2.  **Xcode:** Instal Xcode dari Mac App Store. Ini akan menginstal semua alat baris perintah dan kompiler yang diperlukan.
+3.  **CocoaPods:** Ini adalah manajer dependensi untuk proyek Xcode. Jika Anda belum memilikinya, instal dengan perintah berikut:
+    ```bash
+    sudo gem install cocoapods
+    ```
+
+### **Langkah-langkah**
+1.  **Kloning & Persiapan:**
+    *   Buka Terminal dan kloning repositori:
+        ```bash
+        git clone https://github.com/pengguna/nite.git
+        ```
+    *   Arahkan ke direktori proyek:
+        ```bash
+        cd nite
+        ```
+    *   Ambil semua dependensi Flutter:
+        ```bash
+        flutter pub get
+        ```
+
+2.  **Menjalankan di Simulator atau Perangkat:**
+    *   **Buka Simulator:** Jalankan perintah berikut untuk membuka simulator iOS:
+        ```bash
+        open -a Simulator
+        ```
+    *   **Jalankan Aplikasi:** Di jendela terminal Anda, jalankan:
+        ```bash
+        flutter run
+        ```
+    *   Flutter akan secara otomatis mendeteksi simulator yang berjalan (atau perangkat iOS yang terhubung) dan menginstal aplikasi di sana.
+
+### **Pemecahan Masalah Umum iOS**
+*   **Error CocoaPods:** Jika Anda mengalami error terkait CocoaPods, coba jalankan perintah berikut di dalam direktori `ios` dari proyek Anda:
+    ```bash
+    pod install --repo-update
+    ```
+*   **Masalah Penandatanganan Kode (Code Signing):** Untuk menjalankan di perangkat fisik, Anda mungkin perlu mengkonfigurasi penandatanganan kode di Xcode. Buka file `Runner.xcworkspace` di dalam folder `ios` proyek Anda, pilih "Runner" di navigator proyek, dan pergi ke tab "Signing & Capabilities" untuk mengkonfigurasi tim Anda.
 
 ---
 
