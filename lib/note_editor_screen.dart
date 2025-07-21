@@ -303,6 +303,14 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     );
   }
 
+  Widget _buildActionButton(IconData icon, String tooltip, VoidCallback onPressed) {
+    return IconButton(
+      icon: Icon(icon),
+      tooltip: tooltip,
+      onPressed: onPressed,
+    );
+  }
+
   void _showPasswordDialog() {
     final passwordController = TextEditingController();
     showDialog(
@@ -541,81 +549,37 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                   ),
                       ),
                       const SizedBox(height: 16),
-                      // Placeholder for action buttons
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.volume_up),
-                            onPressed: () {
-                              flutterTts.speak(_quillController.document.toPlainText());
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.draw),
-                            onPressed: () async {
-                              final recognizedText = await Navigator.push<String>(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const DrawingCanvas(),
-                                ),
-                              );
+                      // Action buttons
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            // Group 1: Input Methods
+                            _buildActionButton(Icons.draw, 'Gambar', () async {
+                              final recognizedText = await Navigator.push<String>(context, MaterialPageRoute(builder: (context) => const DrawingCanvas()));
                               if (recognizedText != null && recognizedText.isNotEmpty) {
                                 _quillController.document.insert(_quillController.selection.baseOffset, recognizedText);
                               }
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.music_note),
-                            onPressed: _showLyricsSearchDialog,
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.translate),
-                            onPressed: _showTranslateDialog,
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.videocam),
-                            onPressed: () {
-                              // Implement video to GIF
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(_isRecording ? Icons.stop : Icons.mic),
-                            onPressed: _toggleRecording,
-                          ),
-                          if (_note.audioPath != null)
-                            IconButton(
-                              icon: Icon(_isPlaying ? Icons.stop : Icons.play_arrow),
-                              onPressed: _togglePlaying,
-                            ),
-                          IconButton(
-                            icon: const Icon(Icons.image),
-                            onPressed: _pickImage,
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.camera_alt),
-                            onPressed: () {
-                              screenshotController
-                                  .capture(delay: const Duration(milliseconds: 10))
-                                  .then((capturedImage) async {
+                            }),
+                            _buildActionButton(_isRecording ? Icons.stop : Icons.mic, 'Rekam', _toggleRecording),
+
+                            // Group 2: Content & API
+                            _buildActionButton(Icons.music_note, 'Lirik', _showLyricsSearchDialog),
+                            _buildActionButton(Icons.translate, 'Terjemahkan', _showTranslateDialog),
+
+                            // Group 3: Utility
+                            _buildActionButton(Icons.camera_alt, 'Screenshot', () {
+                               screenshotController.capture(delay: const Duration(milliseconds: 10)).then((capturedImage) async {
                                 if (capturedImage != null) {
                                   final result = await ImageGallerySaver.saveImage(capturedImage);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(result['isSuccess']
-                                          ? 'Tangkapan layar disimpan ke galeri'
-                                          : 'Gagal menyimpan tangkapan layar'),
-                                    ),
-                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result['isSuccess'] ? 'Tangkapan layar disimpan' : 'Gagal menyimpan')));
                                 }
                               });
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(_note.isLocked ? Icons.lock : Icons.lock_open),
-                            onPressed: _showPasswordDialog,
-                          ),
-                        ],
+                            }),
+                            _buildActionButton(_note.isLocked ? Icons.lock : Icons.lock_open, 'Kunci', _showPasswordDialog),
+                          ],
+                        ),
                       )
                     ],
                   ),
