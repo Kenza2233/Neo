@@ -116,12 +116,28 @@ Ingin merasakan kebebasan *ngoding* di mana saja? Panduan ini akan memandu Anda 
         ```
 
 3.  **Instal Flutter SDK di Termux:**
-    *   Ini adalah bagian yang paling rumit. Cari panduan terbaru di web dengan kata kunci "install Flutter SDK in Termux". Secara umum, prosesnya melibatkan pengunduhan file `tar.xz` Flutter untuk Linux ARM64, mengekstraknya, dan menambahkan direktori `bin` Flutter ke `PATH` Termux Anda.
-    *   **Verifikasi Instalasi:** Setelah selesai, tutup dan buka kembali Termux, lalu jalankan:
+    *   **Langkah A: Unduh Flutter SDK.** Kunjungi [situs web Flutter SDK](https://flutter.dev/docs/get-started/install/linux) dan salin tautan unduhan untuk "Linux (ARM64)". Di Termux, gunakan `wget` untuk mengunduh file tersebut. Contoh (pastikan untuk memeriksa versi terbaru):
+        ```bash
+        wget https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.13.0-stable.tar.xz
+        ```
+    *   **Langkah B: Ekstrak File.** Setelah unduhan selesai, ekstrak file tersebut:
+        ```bash
+        tar xf flutter_linux_3.13.0-stable.tar.xz
+        ```
+        Ini akan membuat folder `flutter` di direktori Anda saat ini.
+    *   **Langkah C: Konfigurasi PATH.** Agar Anda dapat menjalankan perintah `flutter` dari mana saja, Anda perlu menambahkan direktori `bin` Flutter ke `PATH` Anda. Jalankan perintah berikut:
+        ```bash
+        echo 'export PATH="$HOME/flutter/bin:$PATH"' >> ~/.bashrc
+        ```
+    *   **Langkah D: Terapkan Perubahan.** Muat ulang konfigurasi shell Anda:
+        ```bash
+        source ~/.bashrc
+        ```
+    *   **Langkah E: Verifikasi Instalasi.** Sekarang, tutup dan buka kembali Termux, lalu jalankan:
         ```bash
         flutter doctor
         ```
-    *   Jangan khawatir jika ada beberapa tanda centang yang hilang (seperti "Chrome" atau "Android Studio"). Yang penting adalah komponen inti Flutter terinstal.
+    *   Jangan khawatir jika ada beberapa tanda centang yang hilang (seperti "Chrome" atau "Android Studio"). Yang penting adalah komponen inti Flutter terinstal dan tidak ada error fatal.
 
 ### **Tahap 2: Memulai Proyek NiTe**
 
