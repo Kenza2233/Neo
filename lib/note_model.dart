@@ -15,6 +15,8 @@ class Note {
 
   int textColor;
 
+  List<String> versionHistory;
+
   Note({
     required this.id,
     required this.content,
@@ -27,6 +29,7 @@ class Note {
     this.isLocked = false,
     this.passwordHash,
     this.textColor = 0xFF000000, // Default to black
+    this.versionHistory = const [],
   });
 
   Map<String, dynamic> toMap() {
@@ -42,6 +45,7 @@ class Note {
       'isLocked': isLocked,
       'passwordHash': passwordHash,
       'textColor': textColor,
+      'versionHistory': versionHistory,
     };
   }
 
@@ -58,6 +62,7 @@ class Note {
       isLocked: map['isLocked'] ?? false,
       passwordHash: map['passwordHash'],
       textColor: map['textColor'] ?? 0xFF000000,
+      versionHistory: List<String>.from(map['versionHistory'] ?? []),
     );
   }
 

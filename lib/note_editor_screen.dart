@@ -14,6 +14,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_tts/flutter_tts.dart';
 import 'drawing_canvas.dart';
+import 'version_history_screen.dart';
 
 class NoteEditorScreen extends StatefulWidget {
   final Note? note;
@@ -283,6 +284,41 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                   builder: (context) => DashboardScreen(note: _note),
                 ),
               );
+            },
+          ),
+          PopupMenuButton(
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'save',
+                child: Text('Simpan Versi'),
+              ),
+              const PopupMenuItem(
+                value: 'view',
+                child: Text('Lihat Riwayat'),
+              ),
+            ],
+            onSelected: (value) async {
+              if (value == 'save') {
+                setState(() {
+                  _note.versionHistory.add(jsonEncode(_quillController.document.toDelta().toJson()));
+                });
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Versi disimpan.')),
+                );
+              } else if (value == 'view') {
+                final restoredVersion = await Navigator.push<String>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => VersionHistoryScreen(note: _note),
+                  ),
+                );
+                if (restoredVersion != null) {
+                  setState(() {
+                    final doc = quill.Document.fromJson(jsonDecode(restoredVersion));
+                    _quillController = quill.QuillController(document: doc, selection: const TextSelection.collapsed(offset: 0));
+                  });
+                }
+              }
             },
           ),
           IconButton(
