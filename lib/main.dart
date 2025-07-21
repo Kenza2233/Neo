@@ -10,9 +10,17 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'hub_screen.dart';
+import 'package:provider/provider.dart';
+import 'theme_provider.dart';
+import 'settings_screen.dart';
 
 void main() {
-  runApp(const NiTeApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const NiTeApp(),
+    ),
+  );
 }
 
 class _NoteCard extends StatelessWidget {
@@ -54,12 +62,13 @@ class NiTeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       title: 'NiTe',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      themeMode: themeProvider.themeMode,
+      theme: MyThemes.lightTheme,
+      darkTheme: MyThemes.darkTheme,
       home: const NoteListScreen(),
     );
   }
@@ -251,24 +260,43 @@ class _NoteListScreenState extends State<NoteListScreen> {
         ],
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text('NiTe Hub', style: TextStyle(color: Colors.white, fontSize: 24)),
-            ),
-            ListTile(
-              leading: const Icon(Icons.archive),
-              title: const Text('Catatan Terarsip'),
-              onTap: () {
-                Navigator.pop(context); // Close the drawer
-                Navigator.push(context, MaterialPageRoute(builder: (context) => HubScreen(notes: _notes)));
-              },
-            ),
-          ],
+        child: Consumer<ThemeProvider>(
+          builder: (context, themeProvider, child) {
+            return ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                const DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                  ),
+                  child: Text('NiTe Hub', style: TextStyle(color: Colors.white, fontSize: 24)),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.archive),
+                  title: const Text('Catatan Terarsip'),
+                  onTap: () {
+                    Navigator.pop(context); // Close the drawer
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => HubScreen(notes: _notes)));
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.settings),
+                  title: const Text('Pengaturan'),
+                  onTap: () {
+                    Navigator.pop(context); // Close the drawer
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsScreen()));
+                  },
+                ),
+                SwitchListTile(
+                  title: const Text('Mode Gelap'),
+                  value: themeProvider.themeMode == ThemeMode.dark,
+                  onChanged: (value) {
+                    themeProvider.toggleTheme(value);
+                  },
+                ),
+              ],
+            );
+          },
         ),
       ),
       body: _buildNotesView(),

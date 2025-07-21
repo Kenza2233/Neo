@@ -64,6 +64,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       _isUnlocked = true;
     }
 
+    _loadRestWordLimit();
     _quillController.addListener(_onTextChanged);
     _startTypingTimer();
     _initSound();
@@ -79,6 +80,14 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     }
   }
 
+  int _restWordLimit = 100;
+  bool _restAlertShown = false;
+
+  void _loadRestWordLimit() async {
+    final prefs = await SharedPreferences.getInstance();
+    _restWordLimit = prefs.getInt('restWordLimit') ?? 100;
+  }
+
   void _onTextChanged() {
     final currentText = _quillController.document.toPlainText();
     if (currentText.length < _previousText.length) {
@@ -86,9 +95,33 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     }
     _previousText = currentText;
 
+    final wordCount = currentText.split(' ').where((s) => s.isNotEmpty).length;
     setState(() {
-      _note.wordCount = currentText.split(' ').where((s) => s.isNotEmpty).length;
+      _note.wordCount = wordCount;
     });
+
+    if (wordCount >= _restWordLimit && !_restAlertShown) {
+      _showRestDialog();
+      _restAlertShown = true; // Prevent dialog from showing again in this session
+    }
+  }
+
+  void _showRestDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Waktunya Istirahat!'),
+          content: Text('Anda telah mengetik lebih dari $_restWordLimit kata. Ambil napas sejenak.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _startTypingTimer() {
