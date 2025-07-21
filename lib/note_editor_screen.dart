@@ -10,6 +10,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:async';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class NoteEditorScreen extends StatefulWidget {
   final Note? note;
@@ -156,6 +157,33 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     );
   }
 
+  void _showColorPicker() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Pilih Warna Teks'),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: Color(_note.textColor),
+              onColorChanged: (color) {
+                setState(() {
+                  _note.textColor = color.value;
+                });
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Selesai'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _showPasswordDialog() {
     final passwordController = TextEditingController();
     showDialog(
@@ -285,7 +313,10 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                           controller: _textController,
                           maxLines: null,
                           expands: true,
-                          style: TextStyle(backgroundColor: Colors.white.withOpacity(0.5)),
+                          style: TextStyle(
+                            backgroundColor: Colors.white.withOpacity(0.5),
+                            color: Color(_note.textColor),
+                          ),
                           decoration: const InputDecoration(
                             hintText: 'Mulai menulis...',
                             border: InputBorder.none,
@@ -293,11 +324,30 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      // Placeholder for color palette
-                      Container(
-                        height: 50,
-                        color: Colors.grey[200]?.withOpacity(0.5),
-                        child: const Center(child: Text('Color Palette Placeholder')),
+                // Color palette
+                GestureDetector(
+                  onTap: _showColorPicker,
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200]?.withOpacity(0.5),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text('Warna Teks'),
+                          const SizedBox(width: 10),
+                          Container(
+                            width: 20,
+                            height: 20,
+                            color: Color(_note.textColor),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                       ),
                       const SizedBox(height: 16),
                       // Placeholder for action buttons

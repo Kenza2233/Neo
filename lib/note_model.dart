@@ -13,6 +13,8 @@ class Note {
   bool isLocked;
   String? passwordHash;
 
+  int textColor;
+
   Note({
     required this.id,
     required this.content,
@@ -24,6 +26,7 @@ class Note {
     this.audioPath,
     this.isLocked = false,
     this.passwordHash,
+    this.textColor = 0xFF000000, // Default to black
   });
 
   Map<String, dynamic> toMap() {
@@ -38,6 +41,7 @@ class Note {
       'audioPath': audioPath,
       'isLocked': isLocked,
       'passwordHash': passwordHash,
+      'textColor': textColor,
     };
   }
 
@@ -53,6 +57,7 @@ class Note {
       audioPath: map['audioPath'],
       isLocked: map['isLocked'] ?? false,
       passwordHash: map['passwordHash'],
+      textColor: map['textColor'] ?? 0xFF000000,
     );
   }
 
