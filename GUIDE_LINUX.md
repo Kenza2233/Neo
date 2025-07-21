@@ -1,47 +1,48 @@
-# 🐧 Panduan untuk Pengembang Linux (Desktop & Ponsel via Termux)
+# 🐧 Panduan Lengkap untuk Pengembang Linux
 
-Panduan ini mencakup penyiapan lingkungan pengembangan NiTe di desktop Linux dan di ponsel Android melalui Termux. Prosesnya sangat mirip.
+Selamat datang, pengembang Linux! Panduan ini akan memandu Anda melalui setiap langkah untuk menjalankan NiTe di lingkungan desktop Linux. Panduan ini juga berlaku untuk pengembangan di ponsel melalui [Termux](https://termux.com/), karena proses dasarnya sama.
 
-### **Tahap 1: Persiapan Lingkungan**
+### **Tahap 1: Menyiapkan Lingkungan Linux Anda**
 
-1.  **Instal Prasyarat:**
-    *   Buka terminal Anda.
-    *   Pastikan Anda memiliki `git` dan `wget`. Jika tidak, instal menggunakan manajer paket Anda (misalnya, `sudo apt-get install git wget` di sistem berbasis Debian/Ubuntu).
+Flutter terasa seperti di rumah sendiri di Linux. Mari kita siapkan.
+
+1.  **Instal Prasyarat Flutter:**
+    *   Flutter memerlukan beberapa alat baris perintah standar. Buka terminal Anda dan instal menggunakan manajer paket distro Anda.
+    *   Untuk **Debian/Ubuntu**:
+        ```bash
+        sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+        ```
+    *   Untuk **Fedora/RHEL/CentOS**:
+        ```bash
+        sudo dnf install clang cmake ninja-build pkg-config gtk3-devel
+        ```
+    *   Pastikan Anda juga memiliki `git` dan `wget`.
 
 2.  **Instal Flutter SDK:**
-    *   **Langkah A: Unduh Flutter SDK.** Kunjungi [situs web Flutter SDK](https://flutter.dev/docs/get-started/install/linux) dan salin tautan unduhan untuk "Linux (ARM64)" jika Anda menggunakan Termux atau perangkat berbasis ARM, atau "Linux (x64)" untuk sebagian besar desktop. Gunakan `wget` untuk mengunduh file tersebut. Contoh untuk x64:
+    *   Cara termudah adalah mengunduh file tarball langsung dari [situs Flutter](https://flutter.dev/docs/get-started/install/linux).
+    *   Pilih lokasi untuk menyimpan SDK (misalnya, `~/development`):
         ```bash
+        cd ~/development
         wget https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.13.0-stable.tar.xz
-        ```
-    *   **Langkah B: Ekstrak File.** Setelah unduhan selesai, ekstrak file tersebut:
-        ```bash
         tar xf flutter_linux_3.13.0-stable.tar.xz
         ```
-        Ini akan membuat folder `flutter` di direktori Anda saat ini.
-    *   **Langkah C: Konfigurasi PATH.** Agar Anda dapat menjalankan perintah `flutter` dari mana saja, Anda perlu menambahkan direktori `bin` Flutter ke `PATH` Anda. Jalankan perintah berikut:
+    *   Tambahkan Flutter ke `PATH` Anda secara permanen. Edit file konfigurasi shell Anda (`~/.bashrc` atau `~/.zshrc`):
         ```bash
-        echo 'export PATH="$HOME/flutter/bin:$PATH"' >> ~/.bashrc
+        echo 'export PATH="$PATH":"$HOME/development/flutter/bin"' >> ~/.bashrc
         ```
-        (Ganti `~/.bashrc` dengan `~/.zshrc` jika Anda menggunakan Zsh).
-    *   **Langkah D: Terapkan Perubahan.** Muat ulang konfigurasi shell Anda:
-        ```bash
-        source ~/.bashrc
-        ```
-    *   **Langkah E: Verifikasi Instalasi.** Sekarang, tutup dan buka kembali terminal, lalu jalankan:
-        ```bash
-        flutter doctor
-        ```
-    *   Ikuti instruksi apa pun dari `flutter doctor` untuk menginstal dependensi yang hilang (misalnya, `clang`, `cmake`, `ninja-build`).
+    *   Muat ulang shell Anda: `source ~/.bashrc`.
 
-### **Tahap 2: Memulai Proyek NiTe**
+3.  **Pemeriksaan Akhir dengan `flutter doctor`:**
+    *   Jalankan `flutter doctor`. Perhatikan baik-baik outputnya.
+    *   Anda harus melihat tanda centang hijau untuk "Flutter" dan "Linux toolchain".
+    *   Jika Anda ingin mengembangkan untuk Android juga, ikuti panduan Android untuk menginstal Android Studio.
 
-1.  **Kloning & Persiapan:**
-    *   Kloning repositori:
+### **Tahap 2: Menjalankan NiTe**
+
+1.  **Kloning & Persiapan Proyek:**
+    *   Di Terminal, arahkan ke direktori kerja Anda, lalu kloning:
         ```bash
         git clone https://github.com/pengguna/nite.git
-        ```
-    *   Arahkan ke direktori proyek:
-        ```bash
         cd nite
         ```
     *   Ambil semua dependensi Flutter:
@@ -49,13 +50,19 @@ Panduan ini mencakup penyiapan lingkungan pengembangan NiTe di desktop Linux dan
         flutter pub get
         ```
 
-### **Tahap 3: Edit, Bangun, dan Jalankan**
-
-1.  **Edit Kode:** Gunakan editor kode favorit Anda (seperti VS Code, Sublime Text, atau Acode di ponsel) untuk mengedit file proyek.
-2.  **Jalankan Aplikasi:**
-    *   Di terminal, pastikan Anda berada di direktori `nite`.
-    *   Jalankan perintah berikut untuk membangun dan menjalankan aplikasi:
+2.  **Menjalankan Aplikasi:**
+    *   Pastikan `flutter doctor` tidak menunjukkan masalah kritis.
+    *   Aktifkan pengembangan desktop Linux:
         ```bash
-        flutter run
+        flutter config --enable-linux-desktop
         ```
-    *   Di desktop, ini akan meluncurkan aplikasi dalam mode debug. Di Termux, ini akan membangun dan menginstal APK di ponsel Anda.
+    *   Jalankan aplikasi:
+        ```bash
+        flutter run -d linux
+        ```
+    *   Ini akan membangun dan meluncurkan aplikasi NiTe sebagai aplikasi desktop Linux asli.
+
+### **Pemecahan Masalah Umum Linux**
+*   **"GTK 3.0 development headers are required"**: Ini berarti Anda melewatkan `libgtk-3-dev` (atau `gtk3-devel`) selama instalasi prasyarat. Instal menggunakan manajer paket Anda.
+*   **`snap` vs. `apt`/`dnf`:** Jika Anda menginstal Flutter menggunakan `snap`, `PATH`-nya mungkin dikelola secara berbeda. Pastikan `which flutter` menunjuk ke instalasi yang benar. Umumnya, mengelola instalasi Anda secara manual (seperti yang dijelaskan di atas) memberikan lebih banyak kontrol.
+*   **Izin Direktori:** Pastikan Anda memiliki izin baca/tulis di direktori tempat Anda mengkloning dan mencoba membangun proyek. Hindari bekerja di direktori yang dimiliki oleh `root`.

@@ -49,6 +49,7 @@ Pilih panduan yang sesuai dengan platform Anda:
 *   [**🐧 Panduan untuk Pengembang Linux (Desktop & Ponsel)**](./GUIDE_LINUX.md)
 *   [**🎨 Rekreasi di Sketchware (Konseptual)**](./GUIDE_SKETCHWARE.md)
 *   [**🅰️ Rekreasi di AIDE (Konseptual)**](./GUIDE_AIDE.md)
+*   [**👨‍💻 Rekreasi di Dcoder (Konseptual)**](./GUIDE_DCODER.md)
 
 ## 🤝 Kontribusi
 
