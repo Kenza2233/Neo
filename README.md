@@ -4,12 +4,27 @@ NiTe adalah aplikasi pencatat serbaguna yang dirancang untuk menjadi pendamping 
 
 ## Fitur
 
-*   **Editor Teks Kaya:** Buat catatan dengan opsi pemformatan seperti tebal, miring, dan garis bawah.
-*   **Palet Warna:** Personalisasi catatan Anda dengan 99 pilihan warna yang berbeda.
-*   **Video ke GIF:** Konversikan video pendek menjadi GIF animasi langsung di dalam aplikasi.
+### Manajemen Catatan Inti
+*   **Editor Teks Kaya:** Buat dan edit catatan dengan opsi pemformatan dasar.
+*   **Penyimpanan Lokal:** Catatan disimpan dengan aman di perangkat Anda untuk akses offline.
+*   **Tata Letak Grid:** Lihat catatan Anda dalam tata letak grid yang dapat disesuaikan.
+
+### Personalisasi
+*   **Wallpaper Catatan:** Atur gambar dari galeri Anda sebagai latar belakang untuk setiap catatan.
+*   **Palet Warna (Akan Datang):** Personalisasi catatan Anda dengan 99 pilihan warna yang berbeda.
+
+### Alat Produktivitas
+*   **Dasbor Statistik:** Dapatkan wawasan tentang kebiasaan mencatat Anda dengan statistik terperinci untuk setiap catatan:
+    *   Durasi mengetik
+    *   Jumlah kata
+    *   Jumlah pembukaan
+    *   Jumlah penghapusan
+*   **Tangkapan Layar:** Ambil tangkapan layar dari catatan Anda dengan mudah dan simpan ke galeri Anda.
+*   **Perekaman Audio:** Lampirkan rekaman audio ke catatan Anda.
+
+### Fitur Multimedia (Akan Datang)
+*   **Video ke GIF:** Konversikan video pendek menjadi GIF animasi.
 *   **Suara ke Teks:** Diktekan catatan Anda dan minta NiTe mengubahnya menjadi teks.
-*   **Tata Letak yang Dapat Disesuaikan:** Atur catatan Anda dalam tata letak grid yang sesuai dengan alur kerja Anda.
-*   **Wallpaper Catatan:** Atur gambar khusus sebagai latar belakang untuk setiap catatan.
 
 ## Memulai
 
