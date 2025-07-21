@@ -3,7 +3,7 @@ import 'dart:convert';
 
 class Note {
   String id;
-  String content;
+  String content; // Will store Quill's Delta as a JSON string
   String? wallpaperPath;
   int typingDuration;
   int wordCount;

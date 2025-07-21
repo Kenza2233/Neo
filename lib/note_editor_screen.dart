@@ -11,6 +11,8 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:async';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:flutter_tts/flutter_tts.dart';
 
 class NoteEditorScreen extends StatefulWidget {
   final Note? note;
@@ -22,7 +24,8 @@ class NoteEditorScreen extends StatefulWidget {
 }
 
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
-  final TextEditingController _textController = TextEditingController();
+  quill.QuillController _quillController = quill.QuillController.basic();
+  FlutterTts flutterTts = FlutterTts();
   String? _wallpaperPath;
   late Note _note;
   Timer? _typingTimer;
@@ -39,11 +42,15 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   @override
   void initState() {
     super.initState();
-    _note = widget.note ?? Note(id: DateTime.now().toIso8601String(), content: '');
+    _note = widget.note ?? Note(id: DateTime.now().toIso8601String(), content: '[{"insert":"\\n"}]');
     _note.openCount++;
-    _textController.text = _note.content;
+    try {
+      final doc = quill.Document.fromJson(jsonDecode(_note.content));
+      _quillController = quill.QuillController(document: doc, selection: const TextSelection.collapsed(offset: 0));
+    } catch (e) {
+      _quillController = quill.QuillController.basic();
+    }
     _wallpaperPath = _note.wallpaperPath;
-    _previousText = _note.content;
 
     if (_note.isLocked) {
       _promptForPassword();
@@ -51,7 +58,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       _isUnlocked = true;
     }
 
-    _textController.addListener(_onTextChanged);
+    _quillController.addListener(_onTextChanged);
     _startTypingTimer();
     _initSound();
   }
@@ -67,7 +74,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   }
 
   void _onTextChanged() {
-    final currentText = _textController.text;
+    final currentText = _quillController.document.toPlainText();
     if (currentText.length < _previousText.length) {
       _deleteCount++;
     }
@@ -94,8 +101,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   @override
   void dispose() {
     _typingTimer?.cancel();
-    _textController.removeListener(_onTextChanged);
-    _textController.dispose();
+    _quillController.removeListener(_onTextChanged);
+    _quillController.dispose();
     _recorder?.closeRecorder();
     _player?.closePlayer();
     super.dispose();
@@ -103,7 +110,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
 
   Future<void> _saveNote() async {
     final prefs = await SharedPreferences.getInstance();
-    _note.content = _textController.text;
+    _note.content = jsonEncode(_quillController.document.toDelta().toJson());
     _note.deleteCount += _deleteCount;
     final notes = prefs.getStringList('notes') ?? [];
     final noteIndex = notes.indexWhere((noteData) => Note.fromMap(jsonDecode(noteData)).id == _note.id);
@@ -308,19 +315,15 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                         child: const Center(child: Text('Toolbar Placeholder')),
                       ),
                       const SizedBox(height: 16),
+                      quill.QuillToolbar.basic(
+                        controller: _quillController,
+                        showBackgroundColorButton: true,
+                        showColorButton: true,
+                      ),
                       Expanded(
-                        child: TextField(
-                          controller: _textController,
-                          maxLines: null,
-                          expands: true,
-                          style: TextStyle(
-                            backgroundColor: Colors.white.withOpacity(0.5),
-                            color: Color(_note.textColor),
-                          ),
-                          decoration: const InputDecoration(
-                            hintText: 'Mulai menulis...',
-                            border: InputBorder.none,
-                          ),
+                        child: quill.QuillEditor.basic(
+                          controller: _quillController,
+                          readOnly: false,
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -354,6 +357,12 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
+                          IconButton(
+                            icon: const Icon(Icons.volume_up),
+                            onPressed: () {
+                              flutterTts.speak(_quillController.document.toPlainText());
+                            },
+                          ),
                           IconButton(
                             icon: const Icon(Icons.videocam),
                             onPressed: () {
