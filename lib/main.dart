@@ -84,7 +84,17 @@ class _NoteListScreenState extends State<NoteListScreen> {
             child: Card(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(note.content, maxLines: 5, overflow: TextOverflow.ellipsis),
+                child: Stack(
+                  children: [
+                    Text(note.content, maxLines: 5, overflow: TextOverflow.ellipsis),
+                    if (note.isLocked)
+                      const Positioned(
+                        top: 0,
+                        right: 0,
+                        child: Icon(Icons.lock, size: 16),
+                      ),
+                  ],
+                ),
               ),
             ),
           );

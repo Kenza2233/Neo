@@ -17,6 +17,7 @@ dependencies:
   screenshot: ^1.2.3
   image_gallery_saver: ^1.7.1
   flutter_sound: ^9.2.13
+  crypto: ^3.0.2
 
 dev_dependencies:
   flutter_test:
