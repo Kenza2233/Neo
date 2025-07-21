@@ -13,6 +13,7 @@ import 'dart:async';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_tts/flutter_tts.dart';
+import 'drawing_canvas.dart';
 
 class NoteEditorScreen extends StatefulWidget {
   final Note? note;
@@ -361,6 +362,20 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                             icon: const Icon(Icons.volume_up),
                             onPressed: () {
                               flutterTts.speak(_quillController.document.toPlainText());
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.draw),
+                            onPressed: () async {
+                              final recognizedText = await Navigator.push<String>(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const DrawingCanvas(),
+                                ),
+                              );
+                              if (recognizedText != null && recognizedText.isNotEmpty) {
+                                _quillController.document.insert(_quillController.selection.baseOffset, recognizedText);
+                              }
                             },
                           ),
                           IconButton(

@@ -21,6 +21,7 @@ dependencies:
   flutter_colorpicker: ^1.0.3
   flutter_quill: ^7.2.10
   flutter_tts: ^3.6.3
+  google_mlkit_text_recognition: ^0.7.0
 
 dev_dependencies:
   flutter_test:
