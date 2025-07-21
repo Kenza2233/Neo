@@ -16,6 +16,9 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'drawing_canvas.dart';
 import 'version_history_screen.dart';
 import 'dart:ui' as ui;
+import 'package:printing/printing.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:translator/translator.dart';
 
 class NoteEditorScreen extends StatefulWidget {
   final Note? note;
@@ -194,6 +197,66 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     );
   }
 
+  Future<void> _showTranslateDialog() async {
+    String? selectedLanguage = 'en'; // Default to English
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Terjemahkan ke'),
+          content: DropdownButton<String>(
+            value: selectedLanguage,
+            onChanged: (String? newValue) {
+              setState(() {
+                selectedLanguage = newValue!;
+              });
+            },
+            items: <String>['en', 'es', 'fr', 'de', 'id'] // Example languages
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                final translator = GoogleTranslator();
+                final originalText = _quillController.document.toPlainText();
+                final translation = await translator.translate(originalText, to: selectedLanguage!);
+                _quillController.document.insert(_quillController.document.length -1, '\n\n--- Terjemahan ---\n${translation.text}');
+              },
+              child: const Text('Terjemahkan'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _printNote() async {
+    final doc = pw.Document();
+    final plainText = _quillController.document.toPlainText();
+
+    doc.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Text(plainText);
+        },
+      ),
+    );
+
+    await Printing.layoutPdf(
+      onLayout: (format) async => doc.save(),
+    );
+  }
+
   void _showPasswordDialog() {
     final passwordController = TextEditingController();
     showDialog(
@@ -323,6 +386,10 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
             },
           ),
           IconButton(
+            icon: const Icon(Icons.print),
+            onPressed: _printNote,
+          ),
+          IconButton(
             icon: const Icon(Icons.save),
             onPressed: () {
               _saveNote();
@@ -429,6 +496,10 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                 _quillController.document.insert(_quillController.selection.baseOffset, recognizedText);
                               }
                             },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.translate),
+                            onPressed: _showTranslateDialog,
                           ),
                           IconButton(
                             icon: const Icon(Icons.videocam),

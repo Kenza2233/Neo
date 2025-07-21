@@ -5,6 +5,11 @@ import 'note_editor_screen.dart';
 import 'note_model.dart';
 import 'layout_type.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'xml_exporter.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'hub_screen.dart';
 
 void main() {
   runApp(const NiTeApp());
@@ -87,6 +92,34 @@ class _NoteListScreenState extends State<NoteListScreen> {
     });
   }
 
+  Future<void> _exportNotes() async {
+    final xmlString = XmlExporter.toXml(_notes);
+    final directory = await getExternalStorageDirectory();
+    final file = File('${directory!.path}/nite_notes.xml');
+    await file.writeAsString(xmlString);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Catatan diekspor ke ${file.path}')),
+    );
+  }
+
+  Future<void> _importNotes() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['xml'],
+    );
+    if (result != null) {
+      final file = File(result.files.single.path!);
+      final xmlString = await file.readAsString();
+      final importedNotes = XmlExporter.fromXml(xmlString);
+      // Di sini, Anda mungkin ingin menggabungkan catatan yang diimpor dengan yang sudah ada,
+      // atau menimpa. Untuk kesederhanaan, kita akan menimpa.
+      final prefs = await SharedPreferences.getInstance();
+      final notesData = importedNotes.map((note) => jsonEncode(note.toMap())).toList();
+      await prefs.setStringList('notes', notesData);
+      _loadNotesAndLayout();
+    }
+  }
+
   Future<void> _saveLayout(LayoutType layoutType) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('layoutType', layoutType.index);
@@ -167,8 +200,16 @@ class _NoteListScreenState extends State<NoteListScreen> {
       appBar: AppBar(
         title: const Text('NiTe'),
         actions: [
-          PopupMenuButton<LayoutType>(
-            onSelected: _saveLayout,
+          PopupMenuButton(
+            onSelected: (value) {
+              if (value is LayoutType) {
+                _saveLayout(value);
+              } else if (value == 'export') {
+                _exportNotes();
+              } else if (value == 'import') {
+                _importNotes();
+              }
+            },
             itemBuilder: (context) => [
               const PopupMenuItem(
                 value: LayoutType.gridTwoColumn,
@@ -190,6 +231,15 @@ class _NoteListScreenState extends State<NoteListScreen> {
                 value: LayoutType.staggered,
                 child: Text('Staggered'),
               ),
+              const PopupMenuDivider(),
+              const PopupMenuItem(
+                value: 'export',
+                child: Text('Ekspor ke XML'),
+              ),
+              const PopupMenuItem(
+                value: 'import',
+                child: Text('Impor dari XML'),
+              ),
             ],
           ),
           IconButton(
@@ -199,6 +249,27 @@ class _NoteListScreenState extends State<NoteListScreen> {
             },
           ),
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text('NiTe Hub', style: TextStyle(color: Colors.white, fontSize: 24)),
+            ),
+            ListTile(
+              leading: const Icon(Icons.archive),
+              title: const Text('Catatan Terarsip'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(context, MaterialPageRoute(builder: (context) => HubScreen(notes: _notes)));
+              },
+            ),
+          ],
+        ),
       ),
       body: _buildNotesView(),
       floatingActionButton: FloatingActionButton(

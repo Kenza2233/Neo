@@ -12,10 +12,9 @@ class Note {
   String? audioPath;
   bool isLocked;
   String? passwordHash;
-
   int textColor;
-
   List<String> versionHistory;
+  DateTime createdAt;
 
   Note({
     required this.id,
@@ -30,7 +29,8 @@ class Note {
     this.passwordHash,
     this.textColor = 0xFF000000, // Default to black
     this.versionHistory = const [],
-  });
+    DateTime? createdAt,
+  }) : this.createdAt = createdAt ?? DateTime.now();
 
   Map<String, dynamic> toMap() {
     return {
@@ -46,6 +46,7 @@ class Note {
       'passwordHash': passwordHash,
       'textColor': textColor,
       'versionHistory': versionHistory,
+      'createdAt': createdAt.toIso8601String(),
     };
   }
 
@@ -63,6 +64,7 @@ class Note {
       passwordHash: map['passwordHash'],
       textColor: map['textColor'] ?? 0xFF000000,
       versionHistory: List<String>.from(map['versionHistory'] ?? []),
+      createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : DateTime.now(),
     );
   }
 
