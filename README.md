@@ -2,29 +2,24 @@
 
 NiTe adalah aplikasi pencatat serbaguna yang dirancang untuk menjadi pendamping utama Anda untuk menangkap ide, pemikiran, dan pengingat. Dengan antarmuka yang bersih dan intuitif, NiTe memudahkan untuk tetap teratur dan produktif.
 
-## Fitur
+## ✨ Fitur Unggulan NiTe ✨
 
-### Manajemen Catatan Inti
-*   **Editor Teks Kaya:** Buat dan edit catatan dengan opsi pemformatan dasar.
-*   **Penyimpanan Lokal:** Catatan disimpan dengan aman di perangkat Anda untuk akses offline.
-*   **Tata Letak Grid:** Lihat catatan Anda dalam tata letak grid yang dapat disesuaikan.
+NiTe bukan sekadar aplikasi catatan biasa. Ini adalah ruang kerja kreatif Anda, yang dirancang untuk beradaptasi dengan cara Anda berpikir dan bekerja.
 
-### Personalisasi
-*   **Wallpaper Catatan:** Atur gambar dari galeri Anda sebagai latar belakang untuk setiap catatan.
-*   **Palet Warna (Akan Datang):** Personalisasi catatan Anda dengan 99 pilihan warna yang berbeda.
+### 🎨 **Ekspresikan Diri Anda Sepenuhnya**
+*   **Editor Teks Supercharged:** Lebih dari sekadar tebal dan miring. Gunakan **Neolights** untuk menyorot ide-ide cemerlang Anda dengan warna-warna neon yang cerah, dan pilih dari palet warna yang luas untuk membuat setiap catatan menjadi milik Anda.
+*   **Wallpaper Kustom:** Bosan dengan latar belakang putih? Atur gambar *apa pun* dari galeri Anda sebagai wallpaper untuk catatan Anda. Personalisasi tidak pernah semenyenangkan ini!
 
-### Alat Produktivitas
-*   **Dasbor Statistik:** Dapatkan wawasan tentang kebiasaan mencatat Anda dengan statistik terperinci untuk setiap catatan:
-    *   Durasi mengetik
-    *   Jumlah kata
-    *   Jumlah pembukaan
-    *   Jumlah penghapusan
-*   **Tangkapan Layar:** Ambil tangkapan layar dari catatan Anda dengan mudah dan simpan ke galeri Anda.
-*   **Perekaman Audio:** Lampirkan rekaman audio ke catatan Anda.
+### 🔒 **Privasi & Keamanan Tingkat Lanjut**
+*   **Kunci Catatan 18+:** Simpan pemikiran pribadi Anda dengan aman. Lindungi catatan sensitif dengan **kata sandi** untuk memastikan hanya Anda yang dapat mengaksesnya.
 
-### Fitur Multimedia (Akan Datang)
-*   **Video ke GIF:** Konversikan video pendek menjadi GIF animasi.
-*   **Suara ke Teks:** Diktekan catatan Anda dan minta NiTe mengubahnya menjadi teks.
+### 🚀 **Tingkatkan Produktivitas Anda**
+*   **Dasbor Analitik:** Pernah bertanya-tanya berapa lama waktu yang Anda habiskan untuk sebuah ide? Dasbor kami memberikan wawasan mendalam tentang kebiasaan mencatat Anda, termasuk *durasi mengetik*, *jumlah kata*, dan banyak lagi.
+*   **Tangkapan Layar Instan:** Abadikan catatan Anda sebagai gambar dengan sekali ketuk. Sempurna untuk dibagikan atau disimpan sebagai referensi visual.
+
+### 🎙️ **Aksesibilitas untuk Semua**
+*   **Bot Suara Cerdas:** Dengarkan catatan Anda dibacakan dengan suara yang jernih, atau gunakan suara Anda untuk menulis. NiTe dirancang agar dapat diakses oleh semua orang, termasuk mereka yang memiliki keterbatasan penglihatan.
+*   **Rekam & Putar:** Lampirkan memo suara ke catatan Anda. Jangan biarkan ide brilian hilang hanya karena Anda tidak sempat menuliskannya.
 
 ## Memulai
 
