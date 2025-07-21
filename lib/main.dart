@@ -64,12 +64,35 @@ class NiTeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
-    return MaterialApp(
-      title: 'NiTe',
-      themeMode: themeProvider.themeMode,
-      theme: MyThemes.lightTheme,
-      darkTheme: MyThemes.darkTheme,
-      home: const NoteListScreen(),
+    // This is a conceptual implementation. A real app would use a better
+    // state management solution to get the animation setting here.
+    return FutureBuilder<SharedPreferences>(
+      future: SharedPreferences.getInstance(),
+      builder: (context, snapshot) {
+        final bool animationsEnabled = snapshot.data?.getBool('uiAnimationsEnabled') ?? true;
+
+        return MaterialApp(
+          title: 'NiTe',
+          themeMode: themeProvider.themeMode,
+          theme: MyThemes.lightTheme.copyWith(
+            pageTransitionsTheme: animationsEnabled ? null : const PageTransitionsTheme(
+              builders: {
+                TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+              },
+            ),
+          ),
+          darkTheme: MyThemes.darkTheme.copyWith(
+            pageTransitionsTheme: animationsEnabled ? null : const PageTransitionsTheme(
+              builders: {
+                TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+              },
+            ),
+          ),
+          home: const NoteListScreen(),
+        );
+      },
     );
   }
 }
@@ -285,13 +308,6 @@ class _NoteListScreenState extends State<NoteListScreen> {
                   onTap: () {
                     Navigator.pop(context); // Close the drawer
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsScreen()));
-                  },
-                ),
-                SwitchListTile(
-                  title: const Text('Mode Gelap'),
-                  value: themeProvider.themeMode == ThemeMode.dark,
-                  onChanged: (value) {
-                    themeProvider.toggleTheme(value);
                   },
                 ),
               ],

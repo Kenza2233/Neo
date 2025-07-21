@@ -45,6 +45,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
 
   bool _isUnlocked = false;
 
+  double _defaultTextSize = 16.0;
+
   @override
   void initState() {
     super.initState();
@@ -64,10 +66,19 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       _isUnlocked = true;
     }
 
+    _loadEditorSettings();
     _loadRestWordLimit();
     _quillController.addListener(_onTextChanged);
     _startTypingTimer();
     _initSound();
+  }
+
+  void _loadEditorSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _defaultTextSize = double.tryParse(prefs.getString('defaultTextSize') ?? '16.0') ?? 16.0;
+      // Load other settings similarly
+    });
   }
 
   Future<void> _pickImage() async {
@@ -469,9 +480,26 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                         },
                       ),
                       Expanded(
-                        child: quill.QuillEditor.basic(
+                        child: quill.QuillEditor(
                           controller: _quillController,
                           readOnly: false,
+                          focusNode: FocusNode(),
+                          scrollController: ScrollController(),
+                          scrollable: true,
+                          padding: EdgeInsets.zero,
+                          autoFocus: false,
+                          expands: false,
+                          customStyles: quill.DefaultStyles(
+                            paragraph: quill.DefaultTextBlockStyle(
+                              TextStyle(
+                                fontSize: _defaultTextSize,
+                                // line-height and letter-spacing are more complex in Quill
+                              ),
+                              const quill.VerticalSpacing(0, 0),
+                              const quill.VerticalSpacing(0, 0),
+                              null,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
