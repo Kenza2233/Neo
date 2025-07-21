@@ -4,6 +4,11 @@ import 'dart:convert';
 import 'note_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'dashboard_screen.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:flutter_sound/flutter_sound.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class NoteEditorScreen extends StatefulWidget {
   final Note? note;
@@ -14,17 +19,33 @@ class NoteEditorScreen extends StatefulWidget {
   _NoteEditorScreenState createState() => _NoteEditorScreenState();
 }
 
+import 'dart:async';
+
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
   final TextEditingController _textController = TextEditingController();
   String? _wallpaperPath;
+  late Note _note;
+  Timer? _typingTimer;
+  int _deleteCount = 0;
+  String _previousText = '';
+  ScreenshotController screenshotController = ScreenshotController();
+  FlutterSoundRecorder? _recorder;
+  FlutterSoundPlayer? _player;
+  bool _isRecording = false;
+  bool _isPlaying = false;
 
   @override
   void initState() {
     super.initState();
-    if (widget.note != null) {
-      _textController.text = widget.note!.content;
-      _wallpaperPath = widget.note!.wallpaperPath;
-    }
+    _note = widget.note ?? Note(id: DateTime.now().toIso8601String(), content: '');
+    _note.openCount++;
+    _textController.text = _note.content;
+    _wallpaperPath = _note.wallpaperPath;
+    _previousText = _note.content;
+
+    _textController.addListener(_onTextChanged);
+    _startTypingTimer();
+    _initSound();
   }
 
   Future<void> _pickImage() async {
@@ -37,19 +58,51 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     }
   }
 
+  void _onTextChanged() {
+    final currentText = _textController.text;
+    if (currentText.length < _previousText.length) {
+      _deleteCount++;
+    }
+    _previousText = currentText;
+
+    setState(() {
+      _note.wordCount = currentText.split(' ').where((s) => s.isNotEmpty).length;
+    });
+  }
+
+  void _startTypingTimer() {
+    _typingTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      _note.typingDuration++;
+    });
+  }
+
+  Future<void> _initSound() async {
+    _recorder = FlutterSoundRecorder();
+    _player = FlutterSoundPlayer();
+    await _recorder!.openRecorder();
+    await _player!.openPlayer();
+  }
+
+  @override
+  void dispose() {
+    _typingTimer?.cancel();
+    _textController.removeListener(_onTextChanged);
+    _textController.dispose();
+    _recorder?.closeRecorder();
+    _player?.closePlayer();
+    super.dispose();
+  }
+
   Future<void> _saveNote() async {
     final prefs = await SharedPreferences.getInstance();
-    final newNote = Note(
-      id: widget.note?.id ?? DateTime.now().toIso8601String(),
-      content: _textController.text,
-      wallpaperPath: _wallpaperPath,
-    );
+    _note.content = _textController.text;
+    _note.deleteCount += _deleteCount;
     final notes = prefs.getStringList('notes') ?? [];
-    final noteIndex = notes.indexWhere((note) => Note.fromMap(jsonDecode(note)).id == newNote.id);
+    final noteIndex = notes.indexWhere((noteData) => Note.fromMap(jsonDecode(noteData)).id == _note.id);
     if (noteIndex != -1) {
-      notes[noteIndex] = jsonEncode(newNote.toMap());
+      notes[noteIndex] = jsonEncode(_note.toMap());
     } else {
-      notes.add(jsonEncode(newNote.toMap()));
+      notes.add(jsonEncode(_note.toMap()));
     }
     await prefs.setStringList('notes', notes);
   }
@@ -60,6 +113,17 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       appBar: AppBar(
         title: const Text('Edit Catatan'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.analytics),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DashboardScreen(note: _note),
+                ),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.save),
             onPressed: () {
@@ -121,15 +185,35 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                       },
                     ),
                     IconButton(
-                      icon: const Icon(Icons.mic),
-                      onPressed: () {
-                        // Implement voice to text
-                      },
+                  icon: Icon(_isRecording ? Icons.stop : Icons.mic),
+                  onPressed: _toggleRecording,
                     ),
+                if (_note.audioPath != null)
+                  IconButton(
+                    icon: Icon(_isPlaying ? Icons.stop : Icons.play_arrow),
+                    onPressed: _togglePlaying,
+                  ),
                     IconButton(
                       icon: const Icon(Icons.image),
                       onPressed: _pickImage,
                     ),
+                IconButton(
+                  icon: const Icon(Icons.camera_alt),
+                  onPressed: () {
+                    screenshotController
+                        .capture(delay: const Duration(milliseconds: 10))
+                        .then((capturedImage) async {
+                      if (capturedImage != null) {
+                        final result = await ImageGallerySaver.saveImage(capturedImage);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(result['isSuccess'] ? 'Tangkapan layar disimpan ke galeri' : 'Gagal menyimpan tangkapan layar'),
+                          ),
+                        );
+                      }
+                    });
+                  },
+                ),
                   ],
                 )
               ],
