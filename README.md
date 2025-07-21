@@ -92,3 +92,30 @@ Setelah Anda menginstal semua dependensi, Anda dapat menjalankan aplikasi di emu
 ## Kontribusi
 
 Kontribusi dipersilakan! Silakan buka masalah atau kirimkan permintaan tarik untuk setiap perubahan.
+
+---
+
+## 📱 Pengembangan di Ponsel (Eksperimental)
+
+Bagi Anda yang suka *ngoding* di mana saja, Anda dapat mencoba mengembangkan NiTe langsung di ponsel Anda menggunakan aplikasi seperti [Acode](https://acode.app/). Berikut adalah panduan singkatnya:
+
+**Prasyarat:**
+1.  **Acode:** Instal aplikasi Acode dari Google Play Store.
+2.  **Termux:** Instal [Termux](https://f-droid.org/en/packages/com.termux/) dari F-Droid. Ini akan berfungsi sebagai terminal Anda.
+3.  **Flutter di Termux:** Ikuti panduan online untuk menginstal Flutter SDK di dalam Termux. Ini mungkin memerlukan beberapa langkah, tetapi ada banyak sumber daya yang tersedia.
+
+**Langkah-langkah:**
+1.  **Kloning Proyek:** Di dalam Termux, kloning repositori NiTe:
+    ```bash
+    git clone https://github.com/pengguna/nite.git
+    ```
+2.  **Buka di Acode:** Buka Acode dan gunakan fitur "Buka Folder" untuk membuka folder proyek NiTe yang baru saja Anda kloning.
+3.  **Edit Kode:** Anda sekarang dapat mengedit file Dart di Acode.
+4.  **Jalankan Perintah Flutter:** Kembali ke Termux untuk menjalankan perintah Flutter seperti:
+    *   `flutter pub get` untuk menginstal dependensi.
+    *   `flutter run` untuk membangun dan menjalankan aplikasi. Karena Anda berada di ponsel, Flutter akan membangun aplikasi dan menginstalnya langsung di perangkat Anda.
+
+**Catatan:**
+*   Proses ini bersifat **eksperimental** dan mungkin memerlukan pemecahan masalah.
+*   Pastikan Anda memiliki ruang penyimpanan yang cukup di ponsel Anda, karena Flutter SDK dan dependensi proyek dapat memakan banyak ruang.
+*   Kinerja build mungkin lebih lambat dibandingkan dengan di desktop.

@@ -356,6 +356,10 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                         controller: _quillController,
                         showBackgroundColorButton: true,
                         showColorButton: true,
+                        showImageButton: true,
+                        onImagePickCallback: (file) async {
+                          return file.path;
+                        },
                       ),
                       Expanded(
                         child: quill.QuillEditor.basic(
