@@ -72,6 +72,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildTextFieldSetting('Ukuran Teks Default', 'defaultTextSize', '16.0'),
           _buildTextFieldSetting('Spasi Baris', 'lineSpacing', '1.5'),
           _buildTextFieldSetting('Spasi Huruf', 'letterSpacing', '0.5'),
+          _buildCategoryHeader('Integrasi'),
+          _buildTextFieldSetting('Kunci API Genius', 'geniusApiKey', ''),
           _buildCategoryHeader('Tentang'),
           ListTile(
             title: const Text('Versi Aplikasi'),

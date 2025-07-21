@@ -19,6 +19,8 @@ import 'dart:ui' as ui;
 import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:translator/translator.dart';
+import 'genius_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NoteEditorScreen extends StatefulWidget {
   final Note? note;
@@ -334,6 +336,13 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     );
   }
 
+  void _showLyricsSearchDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => const _LyricsSearchDialog(),
+    );
+  }
+
   Future<void> _toggleRecording() async {
     if (_isRecording) {
       await _recorder!.stopRecorder();
@@ -457,7 +466,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      // Placeholder for toolbar
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12.0),
                     child: BackdropFilter(
@@ -503,7 +511,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                  // Color palette
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12.0),
                     child: BackdropFilter(
@@ -557,6 +564,10 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                                 _quillController.document.insert(_quillController.selection.baseOffset, recognizedText);
                               }
                             },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.music_note),
+                            onPressed: _showLyricsSearchDialog,
                           ),
                           IconButton(
                             icon: const Icon(Icons.translate),
@@ -614,6 +625,97 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
           : const Center(
               child: Text('Catatan ini terkunci.'),
             ),
+    );
+  }
+}
+
+class _LyricsSearchDialog extends StatefulWidget {
+  const _LyricsSearchDialog({Key? key}) : super(key: key);
+
+  @override
+  __LyricsSearchDialogState createState() => __LyricsSearchDialogState();
+}
+
+class __LyricsSearchDialogState extends State<_LyricsSearchDialog> {
+  final _searchController = TextEditingController();
+  final _geniusService = GeniusService();
+  List<dynamic> _searchResults = [];
+  bool _isLoading = false;
+
+  void _search() async {
+    if (_searchController.text.isEmpty) return;
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      final results = await _geniusService.search(_searchController.text);
+      setState(() {
+        _searchResults = results;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}')),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Cari Lirik di Genius'),
+      content: SizedBox(
+        width: double.maxFinite,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Masukkan judul lagu...',
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: _search,
+                ),
+              ),
+              onSubmitted: (_) => _search(),
+            ),
+            if (_isLoading)
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: CircularProgressIndicator(),
+              )
+            else
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _searchResults.length,
+                  itemBuilder: (context, index) {
+                    final hit = _searchResults[index]['result'];
+                    return ListTile(
+                      title: Text(hit['full_title']),
+                      onTap: () async {
+                        final url = hit['url'];
+                        if (await canLaunchUrl(Uri.parse(url))) {
+                          await launchUrl(Uri.parse(url));
+                        }
+                      },
+                    );
+                  },
+                ),
+              ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Tutup'),
+        ),
+      ],
     );
   }
 }
