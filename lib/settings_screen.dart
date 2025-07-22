@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'theme_provider.dart';
+import 'kpop_theme_type.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -46,11 +47,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildCategoryHeader('Tampilan'),
           SwitchListTile(
             title: const Text('Mode Gelap'),
-            value: themeProvider.themeMode == ThemeMode.dark,
+            value: themeProvider.themeMode == ThemeMode.dark && themeProvider.kpopTheme == null,
             onChanged: (value) {
               themeProvider.toggleTheme(value);
             },
           ),
+          _buildCategoryHeader('Tema Komunitas (K-pop)'),
+          _buildKpopThemeSelector(context),
           ListTile(
             title: const Text('Bahasa Aplikasi'),
             subtitle: const Text('Indonesia (Konseptual)'),
@@ -120,6 +123,51 @@ class _SettingsScreenState extends State<SettingsScreen> {
           color: Theme.of(context).colorScheme.primary,
         ),
       ),
+    );
+  }
+
+  Widget _buildKpopThemeSelector(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: KpopThemeType.values.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+      ),
+      itemBuilder: (context, index) {
+        final themeType = KpopThemeType.values[index];
+        final themeData = MyThemes.getKpopTheme(themeType);
+        return GestureDetector(
+          onTap: () => themeProvider.setKpopTheme(themeType),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [themeData.primaryColor, themeData.floatingActionButtonTheme.backgroundColor!],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(8),
+              border: themeProvider.kpopTheme == themeType
+                  ? Border.all(color: Colors.white, width: 3)
+                  : null,
+            ),
+            child: Center(
+              child: Text(
+                themeType.name[0].toUpperCase(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  shadows: [Shadow(blurRadius: 5.0, color: Colors.black)],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
