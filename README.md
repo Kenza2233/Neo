@@ -1,32 +1,38 @@
-# NiTe - Aplikasi Catatan
+<p align="center">
+  <img src="https://via.placeholder.com/150/007AFF/FFFFFF?text=NiTe" alt="NiTe Logo" width="150"/>
+</p>
+<h1 align="center">NiTe - Catatan Generasi Berikutnya</h1>
 
-NiTe adalah aplikasi pencatat serbaguna yang dirancang untuk menjadi pendamping utama Anda untuk menangkap ide, pemikiran, dan pengingat. Dengan antarmuka yang bersih dan intuitif, NiTe memudahkan untuk tetap teratur dan produktif.
-
-## ✨ Fitur Unggulan NiTe ✨
+<p align="center">
+  <img src="https://img.shields.io/badge/platform-Flutter-blue" alt="Platform: Flutter">
+  <img src="https://img.shields.io/badge/license-MIT-green" alt="License: MIT">
+  <img src="https://img.shields.io/badge/status-aktif-brightgreen" alt="Status: Aktif">
+</p>
 
 NiTe bukan sekadar aplikasi catatan biasa. Ini adalah ekosistem produktivitas lengkap Anda, yang dirancang untuk menangkap, menyempurnakan, dan mengelola ide-ide Anda dengan cara yang belum pernah ada sebelumnya.
 
-### 🎨 **Kustomisasi Tanpa Batas**
-*   **Editor Teks Supercharged:** Lebih dari sekadar tebal dan miring. Gunakan **Neolights** untuk menyorot ide-ide cemerlang, sisipkan gambar langsung di dalam catatan, dan atur setiap aspek tipografi mulai dari **ukuran font** hingga **spasi baris**.
-*   **Tema & Estetika:** Pilih antara **mode terang dan gelap** yang indah, atau matikan animasi UI untuk pengalaman yang lebih cepat. Jadikan NiTe benar-benar milik Anda.
-*   **Atur Tata Letak Anda:** Pilih dari **lima tata letak catatan yang berbeda** (termasuk grid, daftar, dan staggered) untuk disesuaikan dengan alur kerja visual Anda.
-*   **Wallpaper Kustom:** Atur gambar *apa pun* dari galeri Anda sebagai latar belakang untuk setiap catatan.
+## ✨ Tabel Fitur
 
-### 🚀 **Alat Produktivitas Cerdas**
-*   **Hub Catatan:** Akses laci navigasi khusus untuk melihat catatan Anda yang diurutkan berdasarkan tanggal, memberikan perspektif baru pada pekerjaan Anda tanpa mengganggu tata letak utama Anda.
-*   **Riwayat Versi:** Jangan pernah takut kehilangan ide bagus. Simpan *snapshot* dari catatan Anda dan pulihkan versi sebelumnya kapan saja.
-*   **Fitur Istirahat Cerdas:** Jaga kesehatan digital Anda. Atur batas kata, dan NiTe akan dengan lembut mengingatkan Anda untuk beristirahat.
-*   **Dasbor Analitik:** Dapatkan wawasan mendalam tentang kebiasaan mencatat Anda, termasuk *durasi mengetik*, *jumlah kata*, dan banyak lagi.
-
-### 🌐 **Konektivitas & Aksesibilitas**
-*   **Terjemahkan dengan Sekali Ketuk:** Terjemahkan konten catatan Anda ke berbagai bahasa langsung di dalam aplikasi.
-*   **Ekspor/Impor XML:** Cadangkan atau bagikan catatan Anda dengan mudah menggunakan format XML standar.
-*   **Cetak ke PDF:** Ubah catatan Anda menjadi dokumen PDF yang dapat dicetak dengan sempurna.
-*   **Draw to Text:** Tulis tangan ide-ide Anda, dan biarkan NiTe mengubahnya menjadi teks yang dapat diedit.
-*   **Aksesibilitas Penuh:** Dengan dukungan **Text-to-Speech (Bot Suara)** dan **perekaman audio**, NiTe dirancang untuk dapat diakses oleh semua orang.
-
-### 🔒 **Privasi & Keamanan Tingkat Lanjut**
-*   **Kunci Catatan 18+:** Lindungi catatan sensitif dengan **kata sandi** untuk memastikan hanya Anda yang dapat mengaksesnya.
+| Kategori | Fitur | Deskripsi |
+| :--- | :--- | :--- |
+| 🎨 **Kustomisasi** | **Editor Supercharged** | Sorot dengan **Neolights**, sisipkan gambar, atur font, warna, & spasi. |
+| | **Tema & Estetika** | Mode terang/gelap, plus tema komunitas yang dapat diperluas. |
+| | **Tata Letak Fleksibel** | 5+ tata letak (grid, daftar, staggered) untuk disesuaikan dengan gaya Anda. |
+| | **Wallpaper Kustom** | Personalisasi setiap catatan dengan gambar latar belakang Anda sendiri. |
+| 🚀 **Produktivitas** | **Hub Catatan** | Laci navigasi untuk melihat catatan yang diurutkan berdasarkan tanggal. |
+| | **Riwayat Versi** | Simpan & pulihkan *snapshot* dari catatan Anda. Jangan pernah kehilangan ide. |
+| | **Fitur Istirahat** | Atur batas kata untuk mendapatkan pengingat kesehatan digital. |
+| | **Dasbor Analitik** | Lacak metrik seperti durasi mengetik dan jumlah kata. |
+| 🌐 **Konektivitas** | **Terjemahan** | Terjemahkan konten catatan dengan sekali ketuk. |
+| | **Ekspor/Impor XML** | Cadangkan atau bagikan catatan Anda dengan mudah. |
+| | **Cetak ke PDF** | Ubah catatan Anda menjadi dokumen PDF yang dapat dicetak. |
+| | **Pencadangan Cloud** | Sinkronkan ke Google Drive atau iCloud (segera hadir). |
+| 🛠️ **Alat Utilitas** | **Konverter** | Konversi antara basis bilangan (biner, desimal, dll.) & pengkodean. |
+| | **Enkripsi/Dekripsi** | Amankan potongan teks dengan enkripsi AES. |
+| 🎙️ **Aksesibilitas**| **Draw to Text** | Ubah tulisan tangan menjadi teks yang dapat diedit. |
+| | **Text-to-Speech** | Dengarkan catatan Anda dibacakan. |
+| | **Perekaman Audio** | Lampirkan memo suara ke catatan Anda. |
+| 🔒 **Keamanan** | **Kunci Catatan** | Lindungi catatan sensitif dengan kata sandi. |
 
 ## 🚀 Memulai
 

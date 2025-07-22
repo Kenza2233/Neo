@@ -13,6 +13,7 @@ import 'hub_screen.dart';
 import 'package:provider/provider.dart';
 import 'theme_provider.dart';
 import 'settings_screen.dart';
+import 'tools_screen.dart';
 
 void main() {
   runApp(
@@ -300,6 +301,14 @@ class _NoteListScreenState extends State<NoteListScreen> {
                   onTap: () {
                     Navigator.pop(context); // Close the drawer
                     Navigator.push(context, MaterialPageRoute(builder: (context) => HubScreen(notes: _notes)));
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.build),
+                  title: const Text('Alat Utilitas'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const ToolsScreen()));
                   },
                 ),
                 ListTile(
