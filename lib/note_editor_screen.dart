@@ -311,6 +311,56 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     );
   }
 
+  Future<String?> _pickAndProcessImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: source);
+    if (pickedFile == null) return null;
+
+    final inputImage = InputImage.fromFilePath(pickedFile.path);
+    final textRecognizer = TextRecognizer();
+    final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
+
+    textRecognizer.close();
+
+    return recognizedText.text;
+  }
+
+  void _showImageSourceDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text('Pilih Sumber Gambar'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.photo_library),
+                    title: const Text('Galeri'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _triggerOcr(ImageSource.gallery);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.camera_alt),
+                    title: const Text('Kamera'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _triggerOcr(ImageSource.camera);
+                    },
+                  ),
+                ],
+              ),
+            ));
+  }
+
+  void _triggerOcr(ImageSource source) async {
+    final recognizedText = await _pickAndProcessImage(source);
+    if (recognizedText != null && recognizedText.isNotEmpty) {
+      _quillController.document.insert(_quillController.selection.baseOffset, recognizedText);
+    }
+  }
+
   void _showPasswordDialog() {
     final passwordController = TextEditingController();
     showDialog(
@@ -556,6 +606,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             // Group 1: Input Methods
+                            _buildActionButton(Icons.image_search, 'Teks dari Gambar', () => _showImageSourceDialog()),
                             _buildActionButton(Icons.draw, 'Gambar', () async {
                               final recognizedText = await Navigator.push<String>(context, MaterialPageRoute(builder: (context) => const DrawingCanvas()));
                               if (recognizedText != null && recognizedText.isNotEmpty) {
