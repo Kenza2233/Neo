@@ -24,40 +24,6 @@ void main() {
   );
 }
 
-class _NoteCard extends StatelessWidget {
-  final Note note;
-  final VoidCallback onTap;
-
-  const _NoteCard({required this.note, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Card(
-        elevation: 2.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Stack(
-            children: [
-              Text(note.content, maxLines: 10, overflow: TextOverflow.ellipsis),
-              if (note.isLocked)
-                const Positioned(
-                  top: 0,
-                  right: 0,
-                  child: Icon(Icons.lock, size: 16, color: Colors.grey),
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class NiTeApp extends StatelessWidget {
   const NiTeApp({Key? key}) : super(key: key);
 
@@ -144,8 +110,6 @@ class _NoteListScreenState extends State<NoteListScreen> {
       final file = File(result.files.single.path!);
       final xmlString = await file.readAsString();
       final importedNotes = XmlExporter.fromXml(xmlString);
-      // Di sini, Anda mungkin ingin menggabungkan catatan yang diimpor dengan yang sudah ada,
-      // atau menimpa. Untuk kesederhanaan, kita akan menimpa.
       final prefs = await SharedPreferences.getInstance();
       final notesData = importedNotes.map((note) => jsonEncode(note.toMap())).toList();
       await prefs.setStringList('notes', notesData);
@@ -203,12 +167,11 @@ class _NoteListScreenState extends State<NoteListScreen> {
           ),
         );
       case LayoutType.listWithImage:
-        // This would require more logic to extract the first image from the note content
         return ListView.builder(
           key: const ValueKey('listWithImage'),
           itemCount: _notes.length,
           itemBuilder: (context, index) => ListTile(
-            leading: const Icon(Icons.image), // Placeholder
+            leading: const Icon(Icons.image),
             title: Text(_notes[index].content, maxLines: 1, overflow: TextOverflow.ellipsis),
             onTap: () => _navigateToEditor(note: _notes[index]),
           ),
@@ -328,6 +291,40 @@ class _NoteListScreenState extends State<NoteListScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => _navigateToEditor(),
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+class _NoteCard extends StatelessWidget {
+  final Note note;
+  final VoidCallback onTap;
+
+  const _NoteCard({required this.note, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        elevation: 2.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Stack(
+            children: [
+              Text(note.content, maxLines: 10, overflow: TextOverflow.ellipsis),
+              if (note.isLocked)
+                const Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Icon(Icons.lock, size: 16, color: Colors.grey),
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:http/http.dart' as http;
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'dart:convert';
 
 class CloudService {
   // Singleton pattern
@@ -51,7 +52,6 @@ class CloudService {
     }
   }
 
-  // Placeholder for getting an authenticated HTTP client for Google Drive
   Future<http.Client?> getGoogleHttpClient() async {
     if (!isGoogleSignedIn) return null;
     final authHeaders = await _googleUser!.authHeaders;

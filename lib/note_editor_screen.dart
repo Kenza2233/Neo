@@ -44,9 +44,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   FlutterSoundPlayer? _player;
   bool _isRecording = false;
   bool _isPlaying = false;
-
   bool _isUnlocked = false;
-
   double _defaultTextSize = 16.0;
 
   @override
@@ -79,7 +77,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _defaultTextSize = double.tryParse(prefs.getString('defaultTextSize') ?? '16.0') ?? 16.0;
-      // Load other settings similarly
     });
   }
 
@@ -115,7 +112,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
 
     if (wordCount >= _restWordLimit && !_restAlertShown) {
       _showRestDialog();
-      _restAlertShown = true; // Prevent dialog from showing again in this session
+      _restAlertShown = true;
     }
   }
 
@@ -191,7 +188,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.pop(context); // Go back if cancelled
+                Navigator.pop(context);
               },
               child: const Text('Batal'),
             ),
@@ -243,74 +240,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     );
   }
 
-  Future<void> _showTranslateDialog() async {
-    String? selectedLanguage = 'en'; // Default to English
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Terjemahkan ke'),
-          content: DropdownButton<String>(
-            value: selectedLanguage,
-            onChanged: (String? newValue) {
-              setState(() {
-                selectedLanguage = newValue!;
-              });
-            },
-            items: <String>['en', 'es', 'fr', 'de', 'id'] // Example languages
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Batal'),
-            ),
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(context);
-                final translator = GoogleTranslator();
-                final originalText = _quillController.document.toPlainText();
-                final translation = await translator.translate(originalText, to: selectedLanguage!);
-                _quillController.document.insert(_quillController.document.length -1, '\n\n--- Terjemahan ---\n${translation.text}');
-              },
-              child: const Text('Terjemahkan'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _printNote() async {
-    final doc = pw.Document();
-    final plainText = _quillController.document.toPlainText();
-
-    doc.addPage(
-      pw.Page(
-        build: (pw.Context context) {
-          return pw.Text(plainText);
-        },
-      ),
-    );
-
-    await Printing.layoutPdf(
-      onLayout: (format) async => doc.save(),
-    );
-  }
-
-  Widget _buildActionButton(IconData icon, String tooltip, VoidCallback onPressed) {
-    return IconButton(
-      icon: Icon(icon),
-      tooltip: tooltip,
-      onPressed: onPressed,
-    );
-  }
-
   Future<String?> _pickAndProcessImage(ImageSource source) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: source);
@@ -359,6 +288,66 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     if (recognizedText != null && recognizedText.isNotEmpty) {
       _quillController.document.insert(_quillController.selection.baseOffset, recognizedText);
     }
+  }
+
+  Future<void> _showTranslateDialog() async {
+    String? selectedLanguage = 'en';
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Terjemahkan ke'),
+          content: DropdownButton<String>(
+            value: selectedLanguage,
+            onChanged: (String? newValue) {
+              setState(() {
+                selectedLanguage = newValue!;
+              });
+            },
+            items: <String>['en', 'es', 'fr', 'de', 'id']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                final translator = GoogleTranslator();
+                final originalText = _quillController.document.toPlainText();
+                final translation = await translator.translate(originalText, to: selectedLanguage!);
+                _quillController.document.insert(_quillController.document.length -1, '\n\n--- Terjemahan ---\n${translation.text}');
+              },
+              child: const Text('Terjemahkan'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _printNote() async {
+    final doc = pw.Document();
+    final plainText = _quillController.document.toPlainText();
+
+    doc.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Text(plainText);
+        },
+      ),
+    );
+
+    await Printing.layoutPdf(
+      onLayout: (format) async => doc.save(),
+    );
   }
 
   void _showPasswordDialog() {
@@ -442,6 +431,14 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         _isPlaying = true;
       });
     }
+  }
+
+  Widget _buildActionButton(IconData icon, String tooltip, VoidCallback onPressed) {
+    return IconButton(
+      icon: Icon(icon),
+      tooltip: tooltip,
+      onPressed: onPressed,
+    );
   }
 
   @override
@@ -559,7 +556,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                             paragraph: quill.DefaultTextBlockStyle(
                               TextStyle(
                                 fontSize: _defaultTextSize,
-                                // line-height and letter-spacing are more complex in Quill
                               ),
                               const quill.VerticalSpacing(0, 0),
                               const quill.VerticalSpacing(0, 0),
@@ -599,13 +595,11 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                   ),
                       ),
                       const SizedBox(height: 16),
-                      // Action buttons
                       Container(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            // Group 1: Input Methods
                             _buildActionButton(Icons.image_search, 'Teks dari Gambar', () => _showImageSourceDialog()),
                             _buildActionButton(Icons.draw, 'Gambar', () async {
                               final recognizedText = await Navigator.push<String>(context, MaterialPageRoute(builder: (context) => const DrawingCanvas()));
@@ -614,12 +608,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
                               }
                             }),
                             _buildActionButton(_isRecording ? Icons.stop : Icons.mic, 'Rekam', _toggleRecording),
-
-                            // Group 2: Content & API
                             _buildActionButton(Icons.music_note, 'Lirik', _showLyricsSearchDialog),
                             _buildActionButton(Icons.translate, 'Terjemahkan', _showTranslateDialog),
-
-                            // Group 3: Utility
                             _buildActionButton(Icons.camera_alt, 'Screenshot', () {
                                screenshotController.capture(delay: const Duration(milliseconds: 10)).then((capturedImage) async {
                                 if (capturedImage != null) {

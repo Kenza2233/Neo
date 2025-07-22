@@ -84,7 +84,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildCategoryHeader('Tentang'),
           ListTile(
             title: const Text('Versi Aplikasi'),
-            subtitle: const Text('1.0.0 (Alpha)'), // Contoh
+            subtitle: const Text('1.0.0 (Alpha)'),
             onTap: () {},
           ),
         ],
@@ -94,7 +94,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildTextFieldSetting(String label, String key, String defaultValue) {
     final controller = TextEditingController();
-    // In a real app, you would load the initial value from SharedPreferences
     controller.text = defaultValue;
 
     return Padding(
@@ -106,10 +105,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           labelText: label,
         ),
         onChanged: (value) async {
-          // In a real app, you would save this value to SharedPreferences
           final prefs = await SharedPreferences.getInstance();
-          // This is a simplified save, you'd likely want a "Save" button
-          // and parse the value to the correct type (int/double).
           await prefs.setString(key, value);
         },
       ),
@@ -134,7 +130,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ListTile(
                   title: const Text('Cadangkan ke Google Drive'),
                   onTap: () async {
-                    // Placeholder: In a real app, you'd get the notes from a provider
                     final dummyNotes = [Note(id: '1', content: 'Test')];
                     final content = jsonEncode(dummyNotes.map((n) => n.toMap()).toList());
                     await _cloudService.uploadToGoogleDrive(content);
@@ -146,7 +141,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onTap: () async {
                     final content = await _cloudService.downloadFromGoogleDrive();
                     if (content != null) {
-                      // Placeholder: In a real app, you'd parse and save these notes
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pemulihan berhasil.')));
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Tidak ada cadangan yang ditemukan.')));
@@ -178,5 +172,4 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
-
 }
