@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'theme_provider.dart';
-import 'kpop_theme_type.dart';
+import 'cloud_service.dart';
+import 'note_model.dart';
+import 'dart:convert';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -13,6 +15,8 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _uiAnimationsEnabled = true;
+  final CloudService _cloudService = CloudService();
+  bool _isSigningIn = false;
 
   @override
   void initState() {
@@ -47,13 +51,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildCategoryHeader('Tampilan'),
           SwitchListTile(
             title: const Text('Mode Gelap'),
-            value: themeProvider.themeMode == ThemeMode.dark && themeProvider.kpopTheme == null,
+            value: themeProvider.themeMode == ThemeMode.dark,
             onChanged: (value) {
               themeProvider.toggleTheme(value);
             },
           ),
-          _buildCategoryHeader('Tema Komunitas (K-pop)'),
-          _buildKpopThemeSelector(context),
           ListTile(
             title: const Text('Bahasa Aplikasi'),
             subtitle: const Text('Indonesia (Konseptual)'),
@@ -75,6 +77,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildTextFieldSetting('Ukuran Teks Default', 'defaultTextSize', '16.0'),
           _buildTextFieldSetting('Spasi Baris', 'lineSpacing', '1.5'),
           _buildTextFieldSetting('Spasi Huruf', 'letterSpacing', '0.5'),
+          _buildCategoryHeader('Pencadangan & Sinkronisasi'),
+          _buildCloudSection(),
           _buildCategoryHeader('Integrasi'),
           _buildTextFieldSetting('Kunci API Genius', 'geniusApiKey', ''),
           _buildCategoryHeader('Tentang'),
@@ -112,6 +116,55 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  Widget _buildCloudSection() {
+    return _isSigningIn
+        ? const Center(child: CircularProgressIndicator())
+        : Column(
+            children: [
+              if (!_cloudService.isGoogleSignedIn)
+                ListTile(
+                  title: const Text('Masuk dengan Google'),
+                  onTap: () async {
+                    setState(() => _isSigningIn = true);
+                    await _cloudService.signInWithGoogle();
+                    setState(() => _isSigningIn = false);
+                  },
+                ),
+              if (_cloudService.isGoogleSignedIn) ...[
+                ListTile(
+                  title: const Text('Cadangkan ke Google Drive'),
+                  onTap: () async {
+                    // Placeholder: In a real app, you'd get the notes from a provider
+                    final dummyNotes = [Note(id: '1', content: 'Test')];
+                    final content = jsonEncode(dummyNotes.map((n) => n.toMap()).toList());
+                    await _cloudService.uploadToGoogleDrive(content);
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pencadangan selesai.')));
+                  },
+                ),
+                ListTile(
+                  title: const Text('Pulihkan dari Google Drive'),
+                  onTap: () async {
+                    final content = await _cloudService.downloadFromGoogleDrive();
+                    if (content != null) {
+                      // Placeholder: In a real app, you'd parse and save these notes
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pemulihan berhasil.')));
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Tidak ada cadangan yang ditemukan.')));
+                    }
+                  },
+                ),
+                ListTile(
+                  title: const Text('Keluar dari Google'),
+                  onTap: () async {
+                    await _cloudService.signOutFromGoogle();
+                    setState(() {});
+                  },
+                ),
+              ],
+            ],
+          );
+  }
+
   Widget _buildCategoryHeader(String title) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -126,48 +179,4 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildKpopThemeSelector(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: KpopThemeType.values.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        crossAxisSpacing: 8,
-        mainAxisSpacing: 8,
-      ),
-      itemBuilder: (context, index) {
-        final themeType = KpopThemeType.values[index];
-        final themeData = MyThemes.getKpopTheme(themeType);
-        return GestureDetector(
-          onTap: () => themeProvider.setKpopTheme(themeType),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [themeData.primaryColor, themeData.floatingActionButtonTheme.backgroundColor!],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(8),
-              border: themeProvider.kpopTheme == themeType
-                  ? Border.all(color: Colors.white, width: 3)
-                  : null,
-            ),
-            child: Center(
-              child: Text(
-                themeType.name[0].toUpperCase(),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  shadows: [Shadow(blurRadius: 5.0, color: Colors.black)],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
 }

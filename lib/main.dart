@@ -62,35 +62,35 @@ class NiTeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return FutureBuilder<SharedPreferences>(
+          future: SharedPreferences.getInstance(),
+          builder: (context, snapshot) {
+            final bool animationsEnabled = snapshot.data?.getBool('uiAnimationsEnabled') ?? true;
 
-    // This is a conceptual implementation. A real app would use a better
-    // state management solution to get the animation setting here.
-    return FutureBuilder<SharedPreferences>(
-      future: SharedPreferences.getInstance(),
-      builder: (context, snapshot) {
-        final bool animationsEnabled = snapshot.data?.getBool('uiAnimationsEnabled') ?? true;
-
-        return MaterialApp(
-          title: 'NiTe',
-          themeMode: themeProvider.themeMode,
-          theme: MyThemes.lightTheme.copyWith(
-            pageTransitionsTheme: animationsEnabled ? null : const PageTransitionsTheme(
-              builders: {
-                TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-              },
-            ),
-          ),
-          darkTheme: MyThemes.darkTheme.copyWith(
-            pageTransitionsTheme: animationsEnabled ? null : const PageTransitionsTheme(
-              builders: {
-                TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-              },
-            ),
-          ),
-          home: const NoteListScreen(),
+            return MaterialApp(
+              title: 'NiTe',
+              themeMode: themeProvider.themeMode,
+              theme: MyThemes.lightTheme.copyWith(
+                pageTransitionsTheme: animationsEnabled ? null : const PageTransitionsTheme(
+                  builders: {
+                    TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+                    TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                  },
+                ),
+              ),
+              darkTheme: MyThemes.darkTheme.copyWith(
+                pageTransitionsTheme: animationsEnabled ? null : const PageTransitionsTheme(
+                  builders: {
+                    TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+                    TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                  },
+                ),
+              ),
+              home: const NoteListScreen(),
+            );
+          },
         );
       },
     );
